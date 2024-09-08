@@ -18,9 +18,13 @@ awk '/\* I am [A-Za-z]+\. My favorite sandwich is [A-Za-z]+./ {
 
 # Regex 2: Extract sandwich ingredients and whether it's for here or to go from r2_input.txt
 awk '/\* sandwich with [A-Za-z0-9.]+\. (for here|to go)/ {
-  sub(/\* sandwich with /, "", $0)          # Remove the leading "* sandwich with"
-  split($0, arr, ". ")                      # Split at the period and space before "for here" or "to go"
-  order_type = arr[2]                       # Store "for here" or "to go" in order_type
-  gsub(/\.$/, "", arr[1])                   # Remove trailing period from sandwich ingredients
-  print "1. " arr[1] "\n2. " order_type "\n"  # Print sandwich ingredients and order type
+  sub(/\* sandwich with /, "", $0)              # Remove the leading "* sandwich with"
+  
+  # Split the line at the ". " to separate the sandwich and the order type
+  split($0, arr, "\\. ")
+  
+  sandwich = arr[1] "."                         # Add the period back to the sandwich ingredients
+  order_type = arr[2]                           # The order type is in the second part
+  
+  print "1. " sandwich "\n2. " order_type "\n"  # Print sandwich and order type
 }' r2_input.txt > r2_output.txt
